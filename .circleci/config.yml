@@ -134,6 +134,8 @@ jobs:
       - image: circleci/android:api-29-node
     resource_class: large
     steps:
+      - node/install:
+        node-version: "10.17.0"
       - checkout
       - attach_workspace:
           at: .
@@ -142,9 +144,9 @@ jobs:
           command: sdkmanager --licenses
       - run:
           name: build:pre-release
-          command:
-            |
-              METAMASK_ENVIRONMENT='production' yarn build:android:pre-release:bundle
+          command: |
+            node -v
+            METAMASK_ENVIRONMENT='production' yarn build:android:pre-release:bundle
       - store_artifacts:
           path: android/app/build/outputs/bundle/release
           destination: bundle
