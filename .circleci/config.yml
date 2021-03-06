@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  node: circleci/node@4.2.0
 aliases:
   - &restore-node-cache
     keys:
@@ -163,6 +165,8 @@ jobs:
       FL_OUTPUT_DIR: output
     shell: /bin/bash --login -o pipefail
     steps:
+      - node/install:
+          node-version: "10.17.0"
       - checkout
       - attach_workspace:
           at: .
@@ -181,7 +185,9 @@ jobs:
             cd ios && pod install && cd ..
       - run:
           name: pre-release
-          command: METAMASK_ENVIRONMENT='production' yarn build:ios:pre-release
+          command: |
+            node -v
+            METAMASK_ENVIRONMENT='production' yarn build:ios:pre-release
       - store_artifacts:
           path: sourcemaps/ios
           destination: sourcemaps-ios
